@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Platforms Dashboard</title>
+		<link type="text/css" rel="stylesheet" href="{% static 'uptime/html5reset.css' %}"/>
+		<link type="text/css" rel="stylesheet" href="{% static 'uptime/main.css' %}"/
+	</head>
+	<body>
+		<div id="wrapper">
+			<div id="header_container">
+				<div id="header">
+					<h1>Platforms Dashboard</h1>
+					<img src="{% static 'uptime/images/logo_header.png' %}">
+				</div>  
+			</div>
+			
+			<div class="spacer">
+				<ul id="menu">
+					<li><a id="navHome" href="{% url 'uptime:index' %}">Home</a></li>
+					<li><a class="navCurrent" id="navProducts" href="#">Products <span id="downArrow">&#9660</span></a>
+						<ul id="dropdownMenu">
+						{% for p in products %}
+							{% if p.name == product_name %}
+							<li><a class="navCurrent" href="{% url 'uptime:product' p.name %}">{{ p.name }}</a></li>
+							{% else %}
+							<li><a href="{% url 'uptime:product' p.name %}">{{ p.name }}</a></li>
+							{% endif %}
+						{% endfor %}
+						</ul>
+					</li>
+				</ul>
+			</div>
+						{% for p in products %}
+							{% if p.name == product_name %}
+								{% if p.get_projects %}
+			<div id="content_container">
+				<table class="homeContent productContent">
+					<tr>
+						<td class="tableHeader tableProduct">Projects:</td>
+						<td class="tableHeader"></td>
+						<td class="tableHeader">Project</td>
+						<td class="tableHeader">Status</td>
+						<td class="tableHeader">Updates</td>
+					</tr>
+									{% for items in p.get_projects %}
+					<tr>
+						<td class="tableData"></td>
+						<td class="tableData"></td>
+						<td class="tableData">{{ items.proj_name }}</td>
+						<td class="tableData">{{ items.status }}</td>
+						<td class="tableData">{{ items.updates }}</td>
+					</tr>
+									{% endfor %}
+				</table>
+								{% endif %}
+							{% endif %}
+						{% endfor %}
+			</div>
+		</div>
+	</body>
+</html>

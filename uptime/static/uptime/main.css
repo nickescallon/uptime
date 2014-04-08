@@ -1,0 +1,388 @@
+body {
+	text-align: left;
+	line-height: 1.5;
+	background-color: #f6f6f6;
+	font-family: arial,helvetica,"helvetica neue",verdana,sans-serif;
+	font-size: 13px;
+}
+
+h1 {
+  font-family: "Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  color: white;
+  font-weight: 700;
+  font-size: 29px;
+  padding: 0;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+#wrapper {
+  width: 1000px;
+  margin: 0 auto;
+  margin-bottom: 15px;
+  padding-bottom: 15px;
+  background-color: white;
+/*   box-shadow: 0px 8px 6px -6px #777; */ /* <-- Bottom Only Box Shadow */
+  box-shadow: 0 1px 6px 1px #777; /* <-- 3 Sided Box Shadow */
+  overflow: hidden; /*<-- Wrapper will expand vertically to include floated columns */
+}
+
+#header_container {
+  height: 55px;
+  position: relative;
+  width: 100%;
+  background-color: rgb(255, 128, 0);
+/*   border-left: 1px solid rgb(216, 216, 216);
+  border-right: 1px solid rgb(216, 216, 216);
+  border-bottom: 1px solid rgb(216, 216, 216); */
+}
+
+#header h1 {
+  position: absolute;
+  bottom: 0;
+  left: 15px;
+  float: left;
+}
+
+#header img {
+	position: absolute;
+	height: 32px;
+	bottom: 10px;
+	right: 15px;
+	float: right;
+}
+
+.spacer {
+  height: 35px;
+  width: 100%;
+  background: linear-gradient(to bottom, rgb(233, 233, 233) 0%, rgb(216, 216, 216) 100%) repeat scroll left bottom rgb(233, 233, 233);
+/*   border-left: 1px solid rgb(216, 216, 216);
+  border-right: 1px solid rgb(216, 216, 216); */
+  border-bottom: 1px solid rgb(216, 216, 216);
+}
+
+ul#menu li {
+  background: linear-gradient(to bottom, rgb(233, 233, 233) 0%, rgb(216, 216, 216) 100%) repeat scroll left bottom rgb(233, 233, 233);
+  float: left;
+}
+
+ul#menu li a {
+  display: block;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  color: black;
+  text-decoration: none;
+  border: 0;
+  text-align: center;
+}
+
+ul#menu li a#navHome {
+	padding-left: 15px;
+	padding-right: 15px;
+}
+
+ul#menu li a#navProducts {
+	padding-left: 22px;
+	padding-right: 22px;
+}
+
+#downArrow {
+	font-size: 7px;
+	vertical-align: middle;
+}
+
+ul#menu li a:hover,
+ul#menu li a.navCurrent {
+  background-color: #cccccc;
+}
+
+/* Dropdown Menu */
+ul#menu li ul {
+  position: absolute;
+  display: none;
+  z-index: 999;
+}
+
+/* Dropdown Menu List Items */
+ul#menu li ul li{
+  float: none;
+  width: 105px;
+  border-bottom: 1px solid rgb(216, 216, 216);
+  border-left: 1px solid rgb(216, 216, 216);
+  border-right: 1px solid rgb(216, 216, 216);
+}
+
+/* Secondary Dropdown/Side Menu */
+ul#dropdownSideMenu {
+	left: 106px;
+	margin-top: -36px;
+}
+
+ul#menu li ul li:first-child {
+	border-top: 1px solid rgb(216, 216, 216);
+}
+
+ul#menu li:hover > ul{
+  display: block;
+}
+
+#content_container {
+  width: 970px;
+  background-color: white;
+/*   border-left: 1px solid rgb(216, 216, 216);
+  border-right: 1px solid rgb(216, 216, 216);
+  border-bottom: 1px solid rgb(216, 216, 216); */
+  padding-top: 20px;
+  padding-left: 15px;
+  padding-right: 15px;
+  overflow: hidden; /*<-- Container will expand vertically to include floated columns */
+}
+
+#contentContainerLeft {
+	float: left;
+	width: 70%;
+}
+
+#contentContainerRight {
+	float: right;
+	width: 30%;
+}
+
+#textHeader {
+/* 	margin-left: 15px;
+	margin-right: 15px; */
+	border: 1px solid rgb(216, 216, 216);
+	background-color: rgb(243, 243, 243);
+}
+
+#textHeader h2 {
+	padding: 5px 15px;
+	text-transform: none;
+	font-weight: bold;
+}
+
+#textHeaderRight {
+	margin-left: 15px;
+	border: 1px solid rgb(216, 216, 216);
+	border-bottom: none;
+	background-color: rgb(243, 243, 243);
+}
+
+#textHeaderRight h2 {
+	padding: 5px 15px;
+	text-transform: none;
+	font-weight: bold;
+}
+
+#textHeaderRight a {
+	color: black;
+}
+
+#textHeader span {
+	padding: 5px 15px;
+	text-transform: none;
+	font-weight: bold;
+	display: inline-block;
+}
+
+#csv {
+	height: 16px;
+	width: 16px;
+	/* background: black; */
+	float: right;
+	position: relative;
+	right: 6px;
+	top: 6px;
+}
+
+#csv img {
+	height: 16px;
+	width: 16px;
+	/* border: 1px solid grey; */
+}
+
+#textBody {
+	border-left: 1px solid rgb(216, 216, 216);
+	border-right: 1px solid rgb(216, 216, 216);
+	border-bottom: 1px solid rgb(216, 216, 216);
+	/* box-shadow: 0 8px 6px -6px #777; */
+}
+
+#graphBody {
+	border-left: 1px solid rgb(216, 216, 216);
+	border-right: 1px solid rgb(216, 216, 216);
+	border-bottom: 1px solid rgb(216, 216, 216);
+	font-size: 9px;
+	z-index: -1;
+	/* box-shadow: 0 8px 6px -6px #777; */
+}
+
+#textBody p {
+	padding: 10px 15px;
+}
+
+table.homeContent {
+	margin-top: 15px;
+	border: 1px solid rgb(216, 216, 216);
+	table-layout: fixed;
+	width: 969px;
+	/* box-shadow: 0 8px 6px -6px #777; */
+}
+
+table.productContent {
+	width: 100%;
+}
+
+/* table.t1hits {
+	width: 460px;
+} */
+
+.tableHeader {
+	text-align: center;
+	font-weight: bold;
+	text-transform: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+	border-bottom: 1px solid rgb(216, 216, 216);
+	background-color: rgb(243, 243, 243);
+}
+
+.tableProduct {
+	text-align: left;
+	border-bottom: 1px solid rgb(216, 216, 216);
+	padding-left: 15px;
+	width: 190px;
+	white-space: nowrap;
+}
+
+.tableProductHome {
+	width: 161px;
+}
+
+.tableData {
+	text-align: center;
+	border-bottom: 1px solid rgb(216, 216, 216);
+	padding-top: 7.5px;
+	padding-bottom: 7.5px;
+}
+
+.tableStatus {
+	text-align: left;
+	border-bottom: 1px solid rgb(216, 216, 216);
+	padding-top: 7.5px;
+	padding-bottom: 7.5px;
+	padding-left: 15px;
+	width: 14px;
+}
+
+.tableStatusOn {
+	height: 12px;
+	width: 12px;
+	position: relative;
+	bottom: -2px;
+	background-color: lightgreen;
+	border: 1px solid rgb(216, 216, 216);
+}
+
+.tableStatusOff {
+	height: 12px;
+	width: 12px;
+	position: relative;
+	bottom: -2px;
+	background-color: red;
+	border: 1px solid rgb(216, 216, 216);
+}
+
+/* Styling for Right Column/Sidebar */
+#contentRight {
+	border: 1px solid rgb(216, 216, 216);
+	padding: 10px 15px;
+	margin-left: 15px;
+}
+
+/*styling for sidebar sub-headers*/
+#contentRight span {
+	margin-bottom: 7.5px;
+	/* font-weight: bold; */
+	text-decoration: underline;
+}
+
+#contentRight p {
+	/* text-wrap: unrestricted;
+	white-space: normal; */
+}
+
+table.rightColumnTable {
+	width: 100%;
+}
+
+table.rightColumnTable tr td.tableData {
+	text-align: left;
+	border: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+
+/* adding a top margin for all headers other than "deployment"*/
+.rightTableProductPadding {
+	margin-top: 7.5px;
+}
+/* End Styling for Right Column/Sidebar */
+
+/* Add Vertical Lines to Table Cells */
+/* table.homeContent td {
+	border: 1px solid rgb(216, 216, 216);
+} */
+
+/* D3 ENTRIES FOR GRAPHS */
+.axis path,
+.axis line {
+  fill: none;
+  stroke: #000;
+  shape-rendering: crispEdges;
+}
+
+.bar {
+  fill: rgb(255, 128, 0);
+}
+
+.bar:hover {
+  fill: orangered ;
+}
+
+.x.axis path {
+  display: none;
+}
+
+.d3-tip {
+  line-height: 1;
+  font-weight: bold;
+  padding: 12px;
+  background: rgba(0, 0, 0, 0.8);
+  color: #fff;
+  border-radius: 2px;
+}
+
+/* Creates a small triangle extender for the tooltip */
+.d3-tip:after {
+  box-sizing: border-box;
+  display: inline;
+  font-size: 10px;
+  width: 100%;
+  line-height: 1;
+  color: rgba(0, 0, 0, 0.8);
+  content: "\25BC";
+  position: absolute;
+  text-align: center;
+}
+
+/* Style northward tooltips differently */
+.d3-tip.n:after {
+  margin: -1px 0 0 0;
+  top: 100%;
+  left: 0;
+}

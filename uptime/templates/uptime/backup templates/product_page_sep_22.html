@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Platforms Dashboard</title>
+		<link type="text/css" rel="stylesheet" href="{% static 'uptime/html5reset.css' %}"/>
+		<link type="text/css" rel="stylesheet" href="{% static 'uptime/main.css' %}"/>
+		<script src="http://d3js.org/d3.v3.min.js"></script>
+		<script src="http://labratrevenge.com/d3-tip/javascripts/d3.tip.min.js"></script>
+		<script type="text/javascript">
+			var margin = {top: 40, right: 10, bottom: 40, left: 50},
+							width = 610,
+							height = 250;
+						
+			var parseDate = d3.time.format("%Y-%m-%d").parse;
+			var parseDateTime = d3.time.format("%Y-%m-%d %H:%M:%S").parse;
+			var formatPercent = d3.format("rounded");
+			var x = d3.time.scale();	
+			var y = d3.scale.linear()
+				.range([height, 0]);
+			var xAxis = d3.svg.axis()
+				.scale(x)
+				.orient("bottom")
+				
+			var yAxis = d3.svg.axis()
+				.scale(y)
+				.orient("left")
+				.tickFormat(formatPercent);
+			var tip_rt = d3.tip()
+				.attr('class', 'd3-tip')
+				.offset([-10, 0])
+				.html(function(d) {
+					return "<strong>Response Time:</strong> <span style='color:red'>" + d["Response Time"] + "</span>";
+				})
+			var tip_avail = d3.tip()
+				.attr('class', 'd3-tip')
+				.offset([-10, 0])
+				.html(function(d) {
+					return "<strong>Availability:</strong> <span style='color:red'>" + d.Availability + "</span>";
+				})
+		</script>
+			
+	</head>
+	<body>
+		<div id="wrapper">
+		
+			<div id="header_container">
+				<div id="header">
+					<h1>Platforms Dashboard</h1>
+					<img src="{% static 'uptime/images/logo_header.png' %}">
+				</div>  
+			</div>
+			
+			<div class="spacer">
+				<ul id="menu">
+					<li><a id="navHome" href="{% url 'uptime:index' %}">Home</a></li>
+					<li><a class="navCurrent" id="navProducts" href="#">Products <span id="downArrow">&#9660</span></a>
+						<ul id="dropdownMenu">
+						{% for p in products %}
+							{% if p.name == product_name %}
+							<li><a class="navCurrent" href="{% url 'uptime:product' p.name %}">{{ p.name }}</a></li>
+							{% else %}
+							<li><a href="{% url 'uptime:product' p.name %}">{{ p.name }}</a></li>
+							{% endif %}
+						{% endfor %}
+						</ul>
+					</li>
+				</ul>
+			</div>
+			
+			<div id="content_container">
+				<div id="contentContainerLeft">
+					<div id="textHeader">
+						<h2> Product Info</h2>
+					</div>
+					<div id="textBody">
+					{% for p in products %}
+						{% if p.name == product_name %}
+						<p><strong>Product: </strong>{{ p.name }}
+						<p><strong>URL Polled: </strong>{{ p.url }}
+							{% if p.is_it_up %}
+						<p><strong>Current Status: </strong>UP
+						<p><strong>Current Response Time: </strong>{{ p.avg_response_time }}ms
+							{% else %}
+						<p><strong>Current Status: </strong>DOWN
+						<p><strong>Current Response Time: </strong>Not Available
+							{% endif %}
+					</div>
+					<br>
+					<!-- inserting graphs -->
+					<div id="textHeader">
+						<span> Current Response Time (ms)</span>
+						<div id="csv"><a href="./csv/response/120"><img src="{% static 'uptime/images/csv.png' %}"></a></div>
+					</div>
+					<div id="graphBody" class ="cur_rt">
+						<script>
+							var svg_cur_rt = d3.select("#graphBody.cur_rt").append("svg")
+								.attr("width", width + margin.left + margin.right)
+								.attr("height", height + margin.top + margin.bottom)
+								.append("g")
+								.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+							svg_cur_rt.call(tip_rt);
+						
+							d3.csv("./csv/response/120/", type_cur_rt, function(error, data) {
+							
+								x.domain(d3.extent(data, function(d) { return d.Time; }));
+								x.range([0, width]);
+								y.domain([0, d3.max(data, function(d) { return d["Response Time"]; })]);
+								y.range([height, 0]);
+								xAxis.tickFormat(d3.time.format("%H:%M"));
+								xAxis.ticks(5);
+					
+								svg_cur_rt.append("g")
+									.attr("class", "x axis")
+									.attr("transform", "translate(0," + height + ")")
+									.call(xAxis);
+
+								svg_cur_rt.append("g")
+									.attr("class", "y axis")
+									.call(yAxis)
+
+								svg_cur_rt.selectAll(".bar")
+									.data(data)
+									.enter().append("rect")
+									.attr("class", "bar")
+									.attr("x", function(d, i) {return (i * width / data.length + 2);})
+									.attr("width",width / data.length - 1)
+									.attr("y", function(d) { return y(d["Response Time"]); })
+									.attr("height", function(d) { return height - y(d["Response Time"]); })
+									.on('mouseover', tip_rt.show)
+									.on('mouseout', tip_rt.hide)
+							});
+						
+							function type_cur_rt(d) {
+								d.Time = parseDateTime(d.Time);
+								d["Response Time"] = +d["Response Time"];
+								return d;
+							}
+						</script>
+					</div>
+					<br>
+					<div id="textHeader">
+						<span> Average Response Time (ms)</span>
+						<div id="csv"><a href="./csv/response/"><img src="{% static 'uptime/images/csv.png' %}"></a></div>
+					</div>
+					<div id="graphBody" class ="avg_rt">
+						<script>
+							var svg_avg_rt = d3.select("#graphBody.avg_rt").append("svg")
+								.attr("width", width + margin.left + margin.right)
+								.attr("height", height + margin.top + margin.bottom)
+								.append("g")
+								.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+							svg_avg_rt.call(tip_rt);
+
+							d3.csv("./csv/response/", type_rt, function(error, data) {
+							
+								x.domain(d3.extent(data, function(d) { return d.Date; }));
+								x.range([(width / data.length / 2) -1, width - ( width /data.length /2) +1]);
+								y.domain([0, d3.max(data, function(d) { return d["Response Time"]; })]);
+							
+								xAxis.tickFormat(d3.time.format("%b-%y"));
+								xAxis.ticks(data.length);
+					
+								svg_avg_rt.append("g")
+									.attr("class", "x axis")
+									.attr("transform", "translate(0," + height + ")")
+									.call(xAxis);
+
+								svg_avg_rt.append("g")
+									.attr("class", "y axis")
+									.call(yAxis)
+
+								svg_avg_rt.selectAll(".bar")
+									.data(data)
+									.enter().append("rect")
+									.attr("class", "bar")
+									.attr("x", function(d, i) {return (i * width / data.length + 2);})
+									.attr("width",width / data.length - 1)
+									.attr("y", function(d) { return y(d["Response Time"]); })
+									.attr("height", function(d) { return height - y(d["Response Time"]); })
+									.on('mouseover', tip_rt.show)
+									.on('mouseout', tip_rt.hide)
+							});
+
+							function type_rt(d) {
+								d.Date = parseDate(d.Date);
+								d["Response Time"] = +d["Response Time"];
+								return d;
+							}
+						</script>
+					</div>
+					<br>
+					<div id="textHeader">
+						<span> Average Availability</span>
+						<div id="csv"><a href="./csv/availability/"><img src="{% static 'uptime/images/csv.png' %}"></a></div>
+					</div>
+					<div id="graphBody" class="avg_avail">
+						<script>
+							var svg_avg_avail = d3.select("#graphBody.avg_avail").append("svg")
+								.attr("width", width + margin.left + margin.right)
+								.attr("height", height + margin.top + margin.bottom)
+								.append("g")
+								.attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+							svg_avg_avail.call(tip_avail);
+
+							d3.csv("./csv/availability/", type_avail, function(error, data) {
+							
+								x.domain(d3.extent(data, function(d) { return d.Date; }));
+								x.range([(width / data.length / 2) -1, width - ( width /data.length /2) +1]);
+								y.domain([0, d3.max(data, function(d) { return d.Availability; })]);
+								xAxis.tickFormat(d3.time.format("%b-%y"));
+								xAxis.ticks(data.length);
+					
+								svg_avg_avail.append("g")
+									.attr("class", "x axis")
+									.attr("transform", "translate(0," + height + ")")
+									.call(xAxis);
+
+								svg_avg_avail.append("g")
+									.attr("class", "y axis")
+									.call(yAxis)
+
+								svg_avg_avail.selectAll(".bar")
+									.data(data)
+									.enter().append("rect")
+									.attr("class", "bar")
+									.attr("x", function(d, i) {return (i * width / data.length + 2);})
+									.attr("width",width / data.length - 1)
+									.attr("y", function(d) { return y(d.Availability); })
+									.attr("height", function(d) { return height - y(d.Availability); })
+									.on('mouseover', tip_avail.show)
+									.on('mouseout', tip_avail.hide)
+							});
+
+							function type_avail(d) {
+								d.Date = parseDate(d.Date);
+								d.Availability = +d.Availability;
+								return d;
+							}
+						</script>
+					</div>
+					<!-- inserting graph DONE -->
+							{% if p.get_deployments %}
+					<table class="homeContent productContent">
+						<tr>
+							<td class="tableHeader tableProduct">Deployments:</td>
+							<td class="tableHeader"></td>
+							<td class="tableHeader">Version</td>
+							<td class="tableHeader">Date</td>
+							<td class="tableHeader">Status</td>
+						</tr>
+								{% for items in p.get_deployments %}
+						<tr>
+							<td class="tableData"></td>
+							<td class="tableData"></td>
+							<td class="tableData">{{ items.version }}</td>
+							<td class="tableData">{{ items.date }}</td>
+							<td class="tableData">{{ items.status }}</td>
+						</tr>
+								{% endfor %}
+					</table>
+							{% endif %}
+							{% if p.get_projects %}
+					<table class="homeContent productContent">
+						<tr>
+							<td class="tableHeader tableProduct">Projects:</td>
+							<td class="tableHeader"></td>
+							<td class="tableHeader">Project</td>
+							<td class="tableHeader">Status</td>
+							<td class="tableHeader">Updates</td>
+						</tr>
+								{% for items in p.get_projects %}
+						<tr>
+							<td class="tableData"></td>
+							<td class="tableData"></td>
+							<td class="tableData">{{ items.proj_name }}</td>
+							<td class="tableData">{{ items.status }}</td>
+							<td class="tableData">{{ items.updates }}</td>
+						</tr>
+								{% endfor %}
+					</table>
+							{% endif %}
+			
+						{% endif %}
+					{% endfor %}	
+				</div>
+				<div id="contentContainerRight">
+					<div id="textHeaderRight">
+						<h2>Deployment & Project Information</h2>
+					</div>
+					<div id="contentRight">
+						<table class="rightColumnTable">
+							<p>Deployments</p>
+							<tr>
+								<td class="tableData">3.17</td>
+								<td class="tableData">Oct. 16, 2013</td>
+								<td class="tableData">Pending</td>
+							</tr>
+							<tr>
+								<td class="tableData">3.14</td>
+								<td class="tableData">Aug. 20, 2013</td>
+								<td class="tableData">Completed</td>
+							</tr>
+							<tr>
+								<td class="tableData">3.xx</td>
+								<td class="tableData">Mon. dd, 2013</td>
+								<td class="tableData">Status</td>
+							</tr>
+							<tr>
+								<td class="tableData">3.xx</td>
+								<td class="tableData">Mon. dd, 2013</td>
+								<td class="tableData">Status</td>
+							</tr>
+						</table>
+						<table class="rightColumnTable">
+							<p class="rightTableProductPadding">Project: Price Server Expansion</p>
+							<tr>
+								<td class="tableData">Completed</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="tableData">New PSVRs were added to the pool in both OCP and BOS and are now live</td>
+							</tr>
+						</table>
+						<table class="rightColumnTable">
+							<p class="rightTableProductPadding">Project: Boston DC Closure</p>
+							<tr>
+								<td class="tableData">In Progress</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="tableData">Planned for 2014 - No Updates</td>
+							</tr>
+						</table>
+						<table class="rightColumnTable">
+							<p class="rightTableProductPadding">Project: Name</p>
+							<tr>
+								<td class="tableData">Status</td>
+							</tr>
+							<tr>
+								<td colspan="2" class="tableData">Updates</td>
+							</tr>
+						</table>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

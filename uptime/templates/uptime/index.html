@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+{% load staticfiles %}
+
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>Platforms Dashboard</title>
+		<link type="text/css" rel="stylesheet" href="{% static 'uptime/html5reset.css' %}"/>
+		<link type="text/css" rel="stylesheet" href="{% static 'uptime/main.css' %}"/
+	</head>
+	<body>
+		<div id="wrapper">
+		
+			<div id="header_container">
+				<div id="header">
+					<h1>Platforms Dashboard</h1>
+					<img src="{% static 'uptime/images/logo_header.png' %}"/>
+				</div>  
+			</div>
+			
+			<div class="spacer">
+				<ul id="menu">
+					<li><a class="navCurrent" id="navHome" href="#">Home</a></li>
+					<li><a id="navProducts" href="#">Products <span id="downArrow">&#9660</span></a>
+						<ul id="dropdownMenu">
+						{% for p in products %}
+							<li><a href="{% url 'uptime:product' p.name %}">{{ p.name }}</a></li>
+						{% endfor %}
+						</ul>
+					</li>
+				</ul>
+			</div>
+			
+			<div id="content_container">
+				<div id="textHeader">
+					<h2>Platforms Dashboard Information</h2>
+				</div>
+				<div id="textBody">
+					<p>Welcome to the Platforms Dashboard. 	The table below gives a general performance overview of (soon to be all) of our supported products. 
+					<br>
+					If a product is currently unavailable, the first column will display a red square, and if the product is available, the square will be green. 
+					<br>
+					You can use the "Product" dropdown on the menu bar to drill down into each product, where detailed graphs and project/deployment updates are available. 
+					<br>
+					Please e-mail me at: nicolas.escallon@thomsonreuters.com with any questions/issues.
+				</div>
+				<table class="homeContent">
+					<tr>
+						<td class="tableHeader tableStatus"></td>
+						<td class="tableHeader tableProduct  tableProductHome">Product</td>
+						<td class="tableHeader">Availability (Current Month)</td>
+						<td class="tableHeader">Avg. Response Time (Current Month)</td>
+						<td class="tableHeader">Availability Change</td>
+					</tr>
+				{% for p in products %}
+					<tr>
+						{% if p.is_it_up %}
+							<td class="tableStatus"><div class="tableStatusOn"></div></td>
+						{% else %}
+							<td class="tableStatus"><div class="tableStatusOff"></div></td>
+						{% endif %}
+						<td class="tableProduct tableProductHome">{{ p.name }}</td>
+						<td class="tableData">{{ p.availability }} %</td>
+						<td class="tableData">{{ p.avg_response_time }}</td>
+						<td class="tableData">{{ p.change }}</td>
+					</tr>
+				{% endfor %}
+				</table>
+			</div>
+		  
+		</div>
+	</body>
+</html>
